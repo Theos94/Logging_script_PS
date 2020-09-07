@@ -1,10 +1,19 @@
 # Made by Uros Dragicevic
+
+$defaultLogPath = "./log.log"
+
 function Write-Log {
   param (
     [Parameter(Mandatory=$true)][string]$Message,
     [ValidateSet("Info", "Warning", "Error")][string]$MessageType,
     [Parameter(Mandatory=$true)][string]$LogPath
   )
+
+  if ($PSBoundParameters.ContainsKey('LogPath')) {
+    $logPath = $LogPath
+  } else {
+    $logPath = $defaultLogPath
+  }
 
   $date = Get-Date -Format "dd/MM/yyyy-HH:mm:ss"
 
@@ -35,5 +44,5 @@ function Write-Log {
 
   $output = "[$date];[$MessageType];[$functionCall];[$line];[$Message]"
 
-  $output | Tee-Object -FilePath $LogPath -Append | Write-Verbose
+  $output | Tee-Object -FilePath $logPath -Append | Write-Verbose
 }
